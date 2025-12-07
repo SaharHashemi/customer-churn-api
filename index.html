@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Churn Prediction</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🔮 Customer Churn Prediction</h1>
+            <p class="subtitle">Predict customer churn using machine learning models</p>
+        </header>
+
+        <div class="main-content">
+            <div class="form-section">
+                <h2>Enter Customer Data</h2>
+                <form id="predictionForm">
+                    <div class="form-group">
+                        <label for="jsonInput">Customer Data (JSON format):</label>
+                        <textarea 
+                            id="jsonInput" 
+                            name="jsonInput" 
+                            rows="10" 
+                            placeholder='{"feature1": value1, "feature2": value2, ...}'
+                            required></textarea>
+                        <small>Enter customer data as a JSON object with all required features</small>
+                    </div>
+                    <button type="submit" class="btn-primary">Predict Churn</button>
+                </form>
+            </div>
+
+            <div class="result-section" id="resultSection" style="display: none;">
+                <h2>Prediction Results</h2>
+                <div class="result-card">
+                    <div class="result-item">
+                        <span class="label">Teacher Model Prediction:</span>
+                        <span class="value" id="teacherPred">-</span>
+                    </div>
+                    <div class="result-item">
+                        <span class="label">Risk Model Prediction:</span>
+                        <span class="value" id="riskPred">-</span>
+                    </div>
+                    <div class="status-badge" id="statusBadge"></div>
+                </div>
+            </div>
+
+            <div class="error-section" id="errorSection" style="display: none;">
+                <h2>Error</h2>
+                <div class="error-card">
+                    <p id="errorMessage"></p>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>Customer Churn Prediction API - FastAPI + XGBoost</p>
+        </footer>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
