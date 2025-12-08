@@ -29,13 +29,19 @@ except FileNotFoundError:
 # FastAPI App
 # -----------------------------
 app = FastAPI(title="Customer Churn Prediction API")
-app.mount("/static", StaticFiles(directory="static"), name="static")
-templates = Jinja2Templates(directory="templates")
+
+# Mount static files only if directory exists
+if os.path.exists("static"):
+    app.mount("/static", StaticFiles(directory="static"), name="static")
+
+# Setup templates
+templates = Jinja2Templates(directory="templates") if os.path.exists("templates") else None
+
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
+    if templates is None:
+        return HTMLResponse(content="<h1>Customer Churn Prediction API</h1><p>Templates directory not found. Please ensure templates/index.html exists.</p>")
     return templates.TemplateResponse("index.html", {"request": request})
-
-
 # -----------------------------
 # Request Schema
 # -----------------------------
@@ -96,3 +102,4 @@ def predict(payload: CustomerData):
             "error": str(e),
             "status": "error"
         }
+
