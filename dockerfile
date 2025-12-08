@@ -12,17 +12,20 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip, setuptools, and wheel first
-RUN pip install --upgrade pip setuptools wheel
+# Upgrade pip first
+RUN pip install --upgrade pip
+
+# Install setuptools and wheel with specific versions (fixes build_meta issue)
+RUN pip install --no-cache-dir "setuptools>=65.0" "wheel>=0.40.0"
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install numpy first (required for pandas)
-RUN pip install --no-cache-dir numpy==1.24.3
+# Install numpy first (required for pandas) - use --no-build-isolation to avoid setuptools issues
+RUN pip install --no-cache-dir --no-build-isolation numpy==1.24.3
 
 # Install rest of Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+RUN pip install --no-cache-dir --no-build-isolation -r requirements.txt
 
 # Copy application code
 COPY . .
