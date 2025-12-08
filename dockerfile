@@ -7,15 +7,21 @@ RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
     build-essential \
+    libffi-dev \
+    libssl-dev \
+    python3-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Upgrade pip, setuptools, and wheel
+# Upgrade pip, setuptools, and wheel first
 RUN pip install --upgrade pip setuptools wheel
 
 # Copy requirements first for better caching
 COPY requirements.txt .
 
-# Install Python dependencies
+# Install numpy first (required for pandas)
+RUN pip install --no-cache-dir numpy==1.24.3
+
+# Install rest of Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
