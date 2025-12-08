@@ -1,12 +1,12 @@
 FROM python:3.11-slim
 
-# Set Python to use UTF-8 encoding
+# Force Python 3.11 explicitly
+ENV PYTHON_VERSION=3.11
 ENV PYTHONUNBUFFERED=1
-ENV PYTHONIOENCODING=utf-8
 
 WORKDIR /app
 
-# Install system dependencies needed for building packages
+# Install system dependencies
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
@@ -14,31 +14,35 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libssl-dev \
     python3-dev \
+    python3.11-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Verify Python version
-RUN python --version
+# Remove any existing Python 3.13 if present
+RUN apt-get remove -y python3.13* 2>/dev/null || true
 
-# Upgrade pip to latest version
-RUN pip install --upgrade pip==24.0
+# Verify we're using Python 3.11
+RUN python3.11 --version && python3.11 -m pip --version
 
-# Install setuptools and wheel FIRST with specific versions
-RUN pip install --no-cache-dir "setuptools==69.0.0" "wheel==0.42.0"
+# Use python3.11 explicitly for all pip commands
+RUN python3.11 -m pip install --upgrade pip==24.0
 
-# Verify setuptools is installed
-RUN python -c "import setuptools; print('setuptools version:', setuptools.__version__)"
+# Install setuptools with explicit Python 3.11
+RUN python3.11 -m pip install --no-cache-dir "setuptools==69.0.0" "wheel==0.42.0"
 
-# Copy requirements first for better caching
+# Verify setuptools
+RUN python3.11 -c "import setuptools; print('setuptools OK:', setuptools.__version__)"
+
+# Copy requirements
 COPY requirements.txt .
 
-# Install numpy first (required for pandas) - use --no-build-isolation
-RUN pip install --no-cache-dir --no-build-isolation numpy==1.24.3
+# Install numpy first
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation numpy==1.24.3
 
-# Install pandas (depends on numpy)
-RUN pip install --no-cache-dir --no-build-isolation pandas==2.0.3
+# Install pandas
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation pandas==2.0.3
 
-# Install rest of Python dependencies
-RUN pip install --no-cache-dir --no-build-isolation \
+# Install other packages individually
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation \
     fastapi==0.104.1 \
     "uvicorn[standard]==0.24.0" \
     scikit-learn==1.3.2 \
@@ -47,14 +51,14 @@ RUN pip install --no-cache-dir --no-build-isolation \
     jinja2==3.1.2 \
     aiofiles==23.2.1
 
-# Copy application code
+# Copy application
 COPY . .
 
-# Create directories for static files and templates
+# Create directories
 RUN mkdir -p static templates
 
 # Expose port
 EXPOSE 8000
 
-# Run the application
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+# Use python3.11 to run
+CMD ["python3.11", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
