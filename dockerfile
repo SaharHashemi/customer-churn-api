@@ -51,14 +51,17 @@ RUN python3.11 -m pip install --no-cache-dir --no-build-isolation \
     jinja2==3.1.2 \
     aiofiles==23.2.1
 
-# Copy application
+# Copy application code first
 COPY . .
 
-# Create directories
-RUN mkdir -p static templates
+# Ensure directories exist (create if they don't)
+RUN mkdir -p static templates || true
 
+# Verify files are copied
+RUN ls -la /app/ && echo "---" && ls -la /app/static/ 2>/dev/null || echo "static dir will be created" && ls -la /app/templates/ 2>/dev/null || echo "templates dir will be created"
 # Expose port
 EXPOSE 8000
 
 # Use python3.11 to run
 CMD ["python3.11", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
+
