@@ -52,6 +52,8 @@ class CustomerData(BaseModel):
 # -----------------------------
 # Preprocess Function
 # -----------------------------
+    if not FEATURE_NAMES:
+        raise ValueError("Model not loaded. Feature names are not available.")
 def preprocess_input(input_data: dict):
     """
     ورودی JSON → تبدیل به دیتافریم با همه 1409 ستون مدل.
@@ -102,4 +104,5 @@ def predict(payload: CustomerData):
             "error": str(e),
             "status": "error"
         }
+
 
