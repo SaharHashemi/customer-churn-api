@@ -3,6 +3,7 @@ FROM python:3.11-slim
 # Force Python 3.11 explicitly
 ENV PYTHON_VERSION=3.11
 ENV PYTHONUNBUFFERED=1
+ENV PORT=5000
 
 WORKDIR /app
 
@@ -14,11 +15,7 @@ RUN apt-get update && apt-get install -y \
     libffi-dev \
     libssl-dev \
     python3-dev \
-    python3.11-dev \
     && rm -rf /var/lib/apt/lists/*
-
-# Remove any existing Python 3.13 if present
-RUN apt-get remove -y python3.13* 2>/dev/null || true
 
 # Verify we're using Python 3.11
 RUN python3.11 --version && python3.11 -m pip --version
@@ -51,17 +48,19 @@ RUN python3.11 -m pip install --no-cache-dir --no-build-isolation \
     jinja2==3.1.2 \
     aiofiles==23.2.1
 
-# Copy application code first
+# Copy application
 COPY . .
 
-# Ensure directories exist (create if they don't)
+# Create directories if they don't exist
 RUN mkdir -p static templates || true
 
-# Verify files are copied
-RUN ls -la /app/ && echo "---" && ls -la /app/static/ 2>/dev/null || echo "static dir will be created" && ls -la /app/templates/ 2>/dev/null || echo "templates dir will be created"
+# Verify important files exist
+RUN echo "=== Files in /app ===" && ls -la /app/ | head -20 && \
+    echo "=== Checking static ===" && (ls -la /app/static/ 2>/dev/null || echo "static directory empty or missing") && \
+    echo "=== Checking templates ===" && (ls -la /app/templates/ 2>/dev/null || echo "templates directory empty or missing")
+
 # Expose port
-EXPOSE 8000
+EXPOSE 5000
 
 # Use python3.11 to run
-CMD ["python3.11", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
-
+CMD ["python3.11", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
