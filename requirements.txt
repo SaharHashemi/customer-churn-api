@@ -1,8 +1,5 @@
-# Install numpy first (pandas dependency)
 numpy==1.24.3
-# Then pandas
 pandas==2.0.3
-# Rest of dependencies (scikit-learn removed - not needed)
 fastapi==0.104.1
 uvicorn[standard]==0.24.0
 xgboost==2.0.3
