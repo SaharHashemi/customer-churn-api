@@ -38,12 +38,11 @@ RUN python3.11 -m pip install --no-cache-dir --no-build-isolation numpy==1.24.3
 # Install pandas
 RUN python3.11 -m pip install --no-cache-dir --no-build-isolation pandas==2.0.3
 
-# Install other packages individually
-
 # Install packages one by one to avoid conflicts
 RUN python3.11 -m pip install --no-cache-dir --no-build-isolation fastapi==0.104.1
 RUN python3.11 -m pip install --no-cache-dir --no-build-isolation "uvicorn[standard]==0.24.0"
-RUN python3.11 -m pip install --no-cache-dir --no-build-isolation scikit-learn==1.3.2
+# Install scikit-learn (let pip choose compatible version)
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation scikit-learn
 RUN python3.11 -m pip install --no-cache-dir --no-build-isolation xgboost==2.0.3
 RUN python3.11 -m pip install --no-cache-dir --no-build-isolation python-multipart==0.0.6
 RUN python3.11 -m pip install --no-cache-dir --no-build-isolation jinja2==3.1.2
@@ -65,4 +64,5 @@ EXPOSE 5000
 
 # Use python3.11 to run
 CMD ["python3.11", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
+
 
