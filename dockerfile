@@ -39,14 +39,15 @@ RUN python3.11 -m pip install --no-cache-dir --no-build-isolation numpy==1.24.3
 RUN python3.11 -m pip install --no-cache-dir --no-build-isolation pandas==2.0.3
 
 # Install other packages individually
-RUN python3.11 -m pip install --no-cache-dir --no-build-isolation \
-    fastapi==0.104.1 \
-    "uvicorn[standard]==0.24.0" \
-    scikit-learn==1.3.2 \
-    xgboost==2.0.3 \
-    python-multipart==0.0.6 \
-    jinja2==3.1.2 \
-    aiofiles==23.2.1
+
+# Install packages one by one to avoid conflicts
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation fastapi==0.104.1
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation "uvicorn[standard]==0.24.0"
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation scikit-learn==1.3.2
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation xgboost==2.0.3
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation python-multipart==0.0.6
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation jinja2==3.1.2
+RUN python3.11 -m pip install --no-cache-dir --no-build-isolation aiofiles==23.2.1
 
 # Copy application
 COPY . .
@@ -64,3 +65,4 @@ EXPOSE 5000
 
 # Use python3.11 to run
 CMD ["python3.11", "-m", "uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
+
