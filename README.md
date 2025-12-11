@@ -7,20 +7,20 @@ A full-stack web application for predicting customer churn using machine learnin
 - **FastAPI Backend**: High-performance API for churn prediction
 - **Machine Learning Models**: XGBoost-based teacher and risk models
 - **Modern Web Interface**: Beautiful, responsive UI for predictions
-- **Docker Support**: Easy deployment with Docker
+- **Docker Support**: Deployment with Docker
 - **Cloud Ready**: Deploy to any cloud platform
 
 ## 📋 Prerequisites
 
 - Python 3.11+
 - Docker and Docker Compose (for containerized deployment)
-- Your model file: `telco_churn_models.pkl`
+- model file: `telco_churn_models.pkl`
 
 ## 🛠️ Setup Instructions
 
-### 1. Prepare Your Model File
+### 1. Prepare Model File
 
-Place your `telco_churn_models.pkl` file in the project root directory. The model file should contain:
+Place `telco_churn_models.pkl` file in the project root directory. The model file contains:
 - `xgb_teacher`: Teacher model for churn prediction
 - `xgb_risk`: Risk model for churn prediction
 - `feature_names`: List of feature names expected by the model
@@ -52,34 +52,7 @@ Access the application at: `http://localhost:8000`
 
 ## ☁️ Cloud Deployment
 
-### Option 1: Railway (Recommended - Easiest)
-
-1. **Sign up** at [Railway.app](https://railway.app)
-2. **Create a new project** → "Deploy from GitHub repo"
-3. **Connect your GitHub repository**
-4. **Add your model file**:
-   - Go to your project settings
-   - Add `telco_churn_models.pkl` as a file or use Railway's file system
-5. **Deploy**: Railway will automatically detect Docker and deploy
-6. **Get your IP/URL**: Railway provides a public URL (e.g., `https://your-app.railway.app`)
-
-**Railway automatically provides:**
-- Public URL/IP address
-- HTTPS certificate
-- Auto-deployment from Git
-
-### Option 2: Render
-
-1. **Sign up** at [Render.com](https://render.com)
-2. **Create a new Web Service**
-3. **Connect your GitHub repository**
-4. **Configure**:
-   - Build Command: `docker build -t churn-api .`
-   - Start Command: `docker run -p 8000:8000 churn-api`
-5. **Add your model file** in the Render dashboard
-6. **Deploy**: Render provides a public URL
-
-### Option 3: Google Cloud Run
+### Option 1: Google Cloud Run
 
 1. **Install Google Cloud SDK**
 2. **Build and push Docker image**:
@@ -87,31 +60,31 @@ Access the application at: `http://localhost:8000`
 gcloud builds submit --tag gcr.io/YOUR_PROJECT_ID/churn-api
 gcloud run deploy churn-api --image gcr.io/YOUR_PROJECT_ID/churn-api --platform managed --region us-central1 --allow-unauthenticated
 ```
-3. **Get your URL**: Google Cloud Run provides a public URL
+3. **Get  URL**: Google Cloud Run provides a public URL
 
-### Option 4: AWS EC2
+### Option 2: AWS EC2
 
-1. **Launch an EC2 instance** (Ubuntu recommended)
-2. **SSH into your instance**
+1. **Launch an EC2 instance** (Ubuntu )
+2. **SSH into  instance**
 3. **Install Docker**:
 ```bash
 sudo apt-get update
 sudo apt-get install docker.io docker-compose -y
 ```
-4. **Clone your repository**:
+4. **Clone  repository**:
 ```bash
-git clone YOUR_REPO_URL
+git clone REPO_URL
 cd customer-churn-api
 ```
-5. **Copy your model file** to the instance
+5. **Copy  model file** to the instance
 6. **Run with Docker**:
 ```bash
 docker-compose up -d
 ```
 7. **Configure security group** to allow port 8000
-8. **Get your public IP** from EC2 dashboard
+8. **Get  public IP** from EC2 dashboard
 
-### Option 5: DigitalOcean App Platform
+### Option 3: DigitalOcean App Platform
 
 1. **Sign up** at [DigitalOcean](https://www.digitalocean.com)
 2. **Create App** → Connect GitHub
@@ -119,7 +92,7 @@ docker-compose up -d
    - Type: Web Service
    - Dockerfile path: `Dockerfile`
    - Port: 8000
-4. **Add your model file** as a static asset
+4. **Add  model file** as a static asset
 5. **Deploy**: DigitalOcean provides a public URL
 
 ## 📡 API Endpoints
@@ -169,7 +142,7 @@ customer-churn-api/
 
 ## 🔧 Configuration
 
-You can set the model path using environment variable:
+set the model path using environment variable:
 ```bash
 export MODEL_PATH=/path/to/your/model.pkl
 ```
@@ -193,7 +166,7 @@ export MODEL_PATH=/path/to/your/model.pkl
 ## 📝 Notes
 
 - The model file (`telco_churn_models.pkl`) is excluded from git (see `.gitignore`)
-- Make sure to upload your model file to your cloud platform
+- Make sure to upload model file to cloud platform
 - For production, consider adding authentication and rate limiting
 - The application runs on port 8000 by default
 
@@ -204,12 +177,3 @@ For issues or questions, please check:
 2. All dependencies are installed
 3. Docker is properly configured
 4. Ports are accessible
-
-## 🎓 For Your Professor
-
-Once deployed, you'll receive a public URL/IP address that you can share. The application provides:
-- A user-friendly web interface for predictions
-- RESTful API endpoints
-- Docker containerization for easy deployment
-- Full-stack implementation with FastAPI backend
-
